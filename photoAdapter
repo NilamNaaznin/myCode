@@ -1,0 +1,66 @@
+package com.example.design.Adapter;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
+import com.example.design.Class.PhotoClass;
+import com.example.design.R;
+import com.example.design.databinding.ItemPhotosBinding;
+
+import java.util.ArrayList;
+
+public class PhotoDataAdapter extends RecyclerView.Adapter<PhotoDataAdapter.ItemView> {
+
+    ArrayList<PhotoClass>photoClassArrayList=new ArrayList<>();
+    Context context;
+
+    public PhotoDataAdapter(ArrayList<PhotoClass> photoClassArrayList, Context context) {
+        this.photoClassArrayList = photoClassArrayList;
+        this.context = context;
+    }
+
+    @NonNull
+    @Override
+    public PhotoDataAdapter.ItemView onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View v= LayoutInflater.from(context).inflate(R.layout.item_photos,parent,false);
+        return new ItemView(v);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull PhotoDataAdapter.ItemView holder, int position) {
+        holder.binding.tvId.setText(photoClassArrayList.get(position).getId());
+        holder.binding.tvTitle.setText(photoClassArrayList.get(position).getTitle());
+
+        Glide.with(context).load(photoClassArrayList.get(position).getImage())
+                .placeholder(R.drawable.ic_launcher_background)
+                .error(R.drawable.ic_launcher_background)
+                .into(holder.binding.img);
+
+        Glide.with(context).load(photoClassArrayList.get(position).getSubImage())
+                .placeholder(R.drawable.ic_launcher_background)
+                .error(R.drawable.ic_launcher_background)
+                .into(holder.binding.subImg);
+
+
+    }
+
+    @Override
+    public int getItemCount() {
+        return photoClassArrayList.size();
+    }
+
+    public class ItemView extends RecyclerView.ViewHolder {
+
+        ItemPhotosBinding binding;
+        public ItemView(@NonNull View itemView) {
+            super(itemView);
+            binding=ItemPhotosBinding.bind(itemView);
+        }
+    }
+}
