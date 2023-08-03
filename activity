@@ -1,0 +1,146 @@
+package com.example.design.Activity;
+
+import static com.example.design.R.*;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+
+import android.os.Bundle;
+import android.util.Log;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+
+import com.example.design.Adapter.NationDataAdapter;
+import com.example.design.Adapter.PhotoDataAdapter;
+import com.example.design.Class.NationClass;
+import com.example.design.Class.PhotoClass;
+import com.example.design.Network.ApiClient;
+import com.example.design.Network.ApiConstants;
+import com.example.design.Network.ApiInterface;
+import com.example.design.Network.ApiResponse;
+import com.example.design.R;
+import com.example.design.databinding.ActivityTestBinding;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+
+public class TestActivity extends AppCompatActivity implements ApiResponse {
+private ActivityTestBinding binding;
+
+private ArrayList<NationClass>nationDataList=new ArrayList<>();
+NationDataAdapter nationDataAdapter;
+
+PhotoDataAdapter photoDataAdapter;
+private ArrayList<PhotoClass>photoLst=new ArrayList<>();
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+       binding= DataBindingUtil.setContentView(this, layout.activity_test);
+
+       serviceForGETAPI();
+       servicePhotos();
+
+    }
+
+    private void servicePhotos() {
+        ApiInterface apiInterface=ApiClient.getApiInterFace(this);
+        Call<ResponseBody>rbd=apiInterface.getPhotos();
+        ApiClient.callApi(rbd,this,2);
+    }
+
+    private void serviceForGETAPI() {
+        ApiInterface apiInterface= ApiClient.getApiInterFace(this);
+        HashMap<String,String>param=new HashMap<>();
+        param.put("drilldowns","Nation");
+        param.put("measures","Population");
+        Call<ResponseBody>rbd=apiInterface.getApiData(param);
+        ApiClient.callApi(rbd,this,1);
+    }
+
+
+
+    @Override
+    public void OnResponse(String response, int apiRequest) {
+        try {
+            if(apiRequest==1){
+                Log.e("78484489757",response);
+
+
+                JSONObject jsonObject = new JSONObject(response);
+                JSONArray jsonArray = jsonObject.getJSONArray("data");
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject object = jsonArray.getJSONObject(i);
+                    binding.tvNation.setText(object.optString("Nation"));
+
+                    nationDataList.add(new NationClass(object.optString("ID Nation"),
+                            object.optString("Nation"),
+                            object.optString("Year"),
+                            object.optString("Population")
+                            ));
+
+                    Log.e("839466984366", String.valueOf(nationDataList.size()));
+
+
+                    nationDataAdapter= new NationDataAdapter(nationDataList,this);
+                    binding.recycleViewData.setAdapter(nationDataAdapter);
+
+
+
+                }
+                JSONArray jsonArray1=jsonObject.getJSONArray("source");
+                        for(int j=0;j<jsonArray1.length();j++){
+                            JSONObject obj=jsonArray1.getJSONObject(j);
+                           // binding.tvMesure.setText(obj.optString("measures"));
+                        }
+
+            }
+            if (apiRequest==2){
+                try {
+                    Log.e("6453454755",response);
+                    System.out.println(response);
+                   //JSONObject jsonObject = new  JSONObject(response);
+                    JSONArray jsonArray=new JSONArray(response);
+
+                    //JSONArray jsonArray=jsonObject.getJSONArray("");
+                    Log.e("00000000",jsonArray.toString());
+
+
+                    for (int i=0;i<jsonArray.length();i++){
+                        JSONObject jsonObject=jsonArray.getJSONObject(i);
+                       // binding.tvMesure.setText(jsonArray.optString("title"));
+
+                        //jsonArray.getJSONObject(i).optString("id")
+                        photoLst.add(new PhotoClass(jsonObject.optString("id"),
+                                jsonObject.optString("title"),
+                                jsonObject.optString("url"),
+                                jsonObject.optString("thumbnailUrl")));
+
+                        Log.e("7777777", String.valueOf(photoLst.size()));
+
+                    }
+                    photoDataAdapter=new PhotoDataAdapter(photoLst,this);
+                    binding.recycleViewPhoto.setAdapter(photoDataAdapter);
+
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void OnError(String errorResponse, int apiRequest) {
+
+    }
+}
