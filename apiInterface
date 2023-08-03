@@ -1,0 +1,277 @@
+package com.example.design.Network;
+
+import java.util.HashMap;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.http.Body;
+import retrofit2.http.Field;
+import retrofit2.http.FieldMap;
+import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
+import retrofit2.http.Header;
+import retrofit2.http.HeaderMap;
+import retrofit2.http.Headers;
+import retrofit2.http.POST;
+import retrofit2.http.Query;
+import retrofit2.http.QueryMap;
+
+public interface ApiInterface {
+
+    @GET(ApiConstants.GET_Loan_Goldloan_SchemeDetails)
+    Call<ResponseBody>getgoldScheme();
+
+    @GET(ApiConstants.FACT)
+    Call<ResponseBody>getFact();
+
+    @GET(ApiConstants.GET_API_DATA)
+    Call<ResponseBody>getApiData(@QueryMap HashMap<String,String> dataaaa);
+
+    @GET(ApiConstants.PHOTO_TEST_URL)
+    Call<ResponseBody>getPhotos();
+
+
+
+
+
+
+    @FormUrlEncoded
+    @POST(ApiConstants.GET_Member_MemberNameList)
+    Call<ResponseBody>getMemName(@FieldMap HashMap<String,String> mem);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.GET_TodayGoldRate)
+    Call<ResponseBody>getgoldRate(@FieldMap HashMap<String,String>rate);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.GET_Member_SplitDetails)
+    Call<ResponseBody>memDetails(@FieldMap HashMap<String,String>details);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.GET_Loan_Goldloan_Goldloan_Items)
+    Call<ResponseBody>getGoldItem(@FieldMap HashMap<String,String>gold);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.GET_Loan_LoadLoanSchemeDetails)
+    Call<ResponseBody>schemeDeatails(@FieldMap HashMap<String,String>iii);
+
+
+
+
+
+    @POST(ApiConstants.SMS_API)
+    Call<ResponseBody>sendsms(@QueryMap HashMap<String ,String> map);
+
+    @GET(ApiConstants.GET_BALANCE)
+    @Headers({"Content-Type: application/json", "comcode:"+ApiConstants.COMCODE})
+    Call<ResponseBody> bbpsgetBalance(@HeaderMap HashMap<String,String> map);
+
+
+    @FormUrlEncoded
+    @POST(ApiConstants.GET_Login_LoginUser)
+    Call<ResponseBody>login(@FieldMap HashMap<String ,String> map);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.GET_Regn_SearchNameByPhoneNo)
+    Call<ResponseBody>ragistration(@FieldMap HashMap<String ,String> map);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.PUT_Regn_InsertRegn)
+    Call<ResponseBody>insertragistration(@FieldMap HashMap<String ,String> map);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.GET_Agent_LoadOwnProfileInformation)
+    Call<ResponseBody>profile(@FieldMap HashMap<String ,String> map);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.Get_FImage)
+    Call<ResponseBody>profilePIC(@FieldMap HashMap<String ,String> map);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.GET_SB_AccountBalanceByMember)
+    Call<ResponseBody>getBalance(@FieldMap HashMap<String ,String> map);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.POST_SentMail)
+    Call<ResponseBody>post(@FieldMap HashMap<String ,String> map);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.GET_ACC_LastTenTran)
+    Call<ResponseBody>lastTen(@FieldMap HashMap<String ,String> map);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.PUT_Renewal_InsertRenewal)
+    Call<ResponseBody>insertRenewal(@FieldMap HashMap<String ,String> map);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.GET_Member_MemberSynopsis)
+    Call<ResponseBody>synopsys(@FieldMap HashMap<String ,String> map);
+
+    @POST(ApiConstants.GET_ShareValue)
+    Call<ResponseBody>share();
+
+    @FormUrlEncoded
+    @POST(ApiConstants.GET_Config_Generate_OTP)
+    Call<ResponseBody>genOtp(@FieldMap HashMap<String ,String> map);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.PUT_Config_ChangeMpin)
+    Call<ResponseBody>putOtp(@FieldMap HashMap<String ,String> map);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.GET_memberCollectorName)
+    Call<ResponseBody>getcollector(@Field("memberNo")String m);
+
+    @POST(ApiConstants.GET_CompanyInfo)
+    Call<ResponseBody>companyInf();
+
+    @POST(ApiConstants.GET_Config_PolicyRegAmountList)
+    Call<ResponseBody>reglist();
+
+    @FormUrlEncoded
+    @POST(ApiConstants.PUT_Policy_InsertPolicy)
+    Call<ResponseBody>putolicy(@FieldMap HashMap<String ,String> map);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.GET_Policy_LoadAmountDetails)
+    Call<ResponseBody>amount(@FieldMap HashMap<String ,String> map);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.GET_Policy_LoadPolicyMode)
+    Call<ResponseBody>policymode(@FieldMap HashMap<String ,String> map);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.GET_Policy_LoadPTable)
+    Call<ResponseBody>pTable(@FieldMap HashMap<String ,String> map);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.GET_Policy_LoadPlanCode)
+    Call<ResponseBody>pcode(@FieldMap HashMap<String ,String> map);
+
+    @POST(ApiConstants.GET_Loan_LoadLoanScheme)
+    Call<ResponseBody>loanscheme();
+
+    @FormUrlEncoded
+    @POST(ApiConstants.GET_Renewal_LoadDataForPayment)
+    Call<ResponseBody>renewaldata(@FieldMap HashMap<String ,String> map);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.GET_Loan_LoadLoanTerm)
+    Call<ResponseBody>loanterm(@FieldMap HashMap<String ,String> map);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.GET_Loan_LoadLoanAmountChecking)
+    Call<ResponseBody>amountChecking(@FieldMap HashMap<String ,String> map);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.GET_Loan_CalculateEmi)
+    Call<ResponseBody>calculateEmi(@FieldMap HashMap<String ,String> map);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.PUT_Loan_LoanInsert)
+    Call<ResponseBody>insertLoan(@FieldMap HashMap<String ,String> map);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.GET_Member_SplitDetails_single)
+    Call<ResponseBody>singlesplit(@FieldMap HashMap<String ,String> map);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.GET_Member_LoadPolicyList)
+    Call<ResponseBody>memberPolicyList(@FieldMap HashMap<String ,String> map);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.GET_Renewal_MemberSearchPolicy)
+    Call<ResponseBody>memberSearchPolicy(@FieldMap HashMap<String ,String> map);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.GET_Loan_SearchLoanForRepayment)
+    Call<ResponseBody>loanforRep(@FieldMap HashMap<String ,String> map);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.GET_Loan_LoadLoanDetailsForRepaymentAdvance)
+    Call<ResponseBody>repAdvance(@FieldMap HashMap<String ,String> map);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.PUT_Loan_InsertRepaymentAdvance)
+    Call<ResponseBody>InsertrepAdvance(@FieldMap HashMap<String ,String> map);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.GET_Loan_LoanNameList)
+    Call<ResponseBody>getloannamelist(@FieldMap HashMap<String ,String> map);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.GET_Loan_SearchLoanForRepaymentNonEmi)
+    Call<ResponseBody>repNonemi(@FieldMap HashMap<String ,String> map);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.GET_Loan_loadPriIntForRepaymentNonEmi)
+    Call<ResponseBody>loadPrint(@FieldMap HashMap<String ,String> map);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.PUT_Loan_InsertLoanRepaymentNonEmi)
+    Call<ResponseBody>insertNonemi(@FieldMap HashMap<String ,String> map);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.GET_Loan_LoanEmiStatement)
+    Call<ResponseBody>emiStatement(@FieldMap HashMap<String ,String> map);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.PUT_ACC_InsertSBTransferMember)
+    Call<ResponseBody>sbTransfer(@FieldMap HashMap<String ,String> map);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.GET_ACC_AccountNameList)
+    Call<ResponseBody>getacName(@FieldMap HashMap<String ,String> map);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.GET_ACC_SplitDetails)
+    Call<ResponseBody>getaccSplit(@FieldMap HashMap<String ,String> map);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.GET_Policy_LoadPolicyList)
+    Call<ResponseBody>getpolicyList(@FieldMap HashMap<String ,String> map);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.GET_Policy_GetPolicyNo)
+    Call<ResponseBody>getpoilicyNo(@FieldMap HashMap<String ,String> map);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.GET_Policy_PolicyStatement)
+    Call<ResponseBody>getpoilicyStatement(@FieldMap HashMap<String ,String> map);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.GET_ACC_AccountNameListMk)
+    Call<ResponseBody>acclistmk(@FieldMap HashMap<String ,String> map);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.GET_ACC_SplitDetailsMk)
+    Call<ResponseBody>splitaccMk(@FieldMap HashMap<String ,String> map);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.GET_ACC_SavingsStatement)
+    Call<ResponseBody>savingstatement(@FieldMap HashMap<String ,String> map);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.GET_Policy_LoadFDPolicyList)
+    Call<ResponseBody>getfdplist(@FieldMap HashMap<String ,String> map);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.GET_Policy_FDPolicyStatement)
+    Call<ResponseBody>getfdpstate(@FieldMap HashMap<String ,String> map);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.GET_Loan_LoanNameListForStatement)
+    Call<ResponseBody>listforstate(@FieldMap HashMap<String ,String> map);
+
+    @FormUrlEncoded
+    @POST(ApiConstants.GET_Loan_LoanEmiBreakUp)
+    Call<ResponseBody>emibreakup(@FieldMap HashMap<String ,String> map);
+
+    @POST(ApiConstants.GET_Policy_LoadPlanCodeALL)
+    Call<ResponseBody>plancodeall();
+
+    @FormUrlEncoded
+    @POST(ApiConstants.PUT_InsertSharePurchase)
+    Call<ResponseBody>buyshare(@FieldMap HashMap<String ,String> map);
+
+}
