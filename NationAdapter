@@ -1,0 +1,56 @@
+package com.example.design.Adapter;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.design.Class.NationClass;
+import com.example.design.R;
+import com.example.design.databinding.ItemLanguagesBinding;
+
+import java.util.ArrayList;
+
+public class NationDataAdapter extends RecyclerView.Adapter<NationDataAdapter.Itemview> {
+    ArrayList<NationClass>dataLiat;
+    Context context;
+
+    public NationDataAdapter(ArrayList<NationClass> dataLiat, Context context) {
+        this.dataLiat = dataLiat;
+        this.context = context;
+    }
+
+    @NonNull
+    @Override
+    public NationDataAdapter.Itemview onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View v= LayoutInflater.from(context).inflate(R.layout.item_languages,parent,false);
+        return new Itemview(v);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull NationDataAdapter.Itemview holder, int position) {
+        holder.languagesBinding.tvId.setText(dataLiat.get(position).getId());
+        holder.languagesBinding.tvNation.setText(dataLiat.get(position).getNation());
+        holder.languagesBinding.tvPopulation.setText(dataLiat.get(position).getPopulation());
+        holder.languagesBinding.tvYear.setText(dataLiat.get(position).getYear());
+
+
+    }
+
+    @Override
+    public int getItemCount() {
+        return dataLiat.size();
+    }
+
+    public class Itemview extends RecyclerView.ViewHolder {
+
+        ItemLanguagesBinding languagesBinding;
+        public Itemview(@NonNull View itemView) {
+            super(itemView);
+            languagesBinding=ItemLanguagesBinding.bind(itemView);
+        }
+    }
+}
