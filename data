@@ -1,0 +1,233 @@
+  implementation 'com.google.android.gms:play-services-ads:22.2.0'
+
+    //Room Data Base Library
+    implementation "androidx.room:room-runtime:2.4.3"
+    annotationProcessor "androidx.room:room-compiler:2.4.3"
+
+//lottie animation
+    implementation "com.airbnb.android:lottie:3.4.0"
+
+
+
+@Dao
+public interface DaoClass {
+    @Insert
+    void insertData(RoomData roomDataClass );
+
+    @Query("select * from ExpensesTable")
+    List<RoomData> getRoomData();
+
+    @Delete
+    public void deleteGoldData(RoomData roomDataClass);
+
+    @Query("DELETE FROM ExpensesTable WHERE `key` = :key")
+    void deleteById(int key);
+
+
+}
+
+-----------------------------
+  @Database(entities = {RoomData.class},version = 1)
+
+public abstract class DataBaseClass extends RoomDatabase {
+
+    public abstract DaoClass getItemInsert();
+    private static DataBaseClass instance;
+
+    public static final DataBaseClass getDataBase(final Context context)
+    {
+        if(instance == null){
+            synchronized (DataBaseClass.class){
+                instance= Room.databaseBuilder(context,DataBaseClass.class,"DATABASE").allowMainThreadQueries().build();
+            }
+        }
+        return instance;
+    }
+}
+=======================
+  @Entity(tableName="ExpensesTable")
+public class RoomData {
+
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "key")
+    @NonNull
+    private int key;
+
+    @ColumnInfo(name="expenses")
+   private String expenses;
+
+    @ColumnInfo(name ="amount")
+    private String amount;
+
+    @ColumnInfo(name ="date")
+    private String date;
+
+    public int getKey() {
+        return key;
+    }
+
+    public void setKey(int key) {
+        this.key = key;
+    }
+
+    public String getExpenses() {
+        return expenses;
+    }
+
+    public void setExpenses(String expenses) {
+        this.expenses = expenses;
+    }
+
+    public String getAmount() {
+        return amount;
+    }
+
+    public void setAmount(String amount) {
+        this.amount = amount;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+}
+------------------------------------------
+
+  public class MainActivity extends AppCompatActivity {
+    private ActivityMainBinding binding;
+    private PopupAddDataBinding popupAddDataBinding;
+    Dialog dialog;
+    AlertDialog alertDialog;
+    int f = 1;
+    private int mYear, mMonth, mDay, mHour, mMinute;
+    RoomDataAdapter roomDataAdapter;
+    ArrayList<RoomData> roomDataList = new ArrayList<>();
+    RoomData roomData = new RoomData();
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        //setContentView(R.layout.activity_main);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+
+        roomDataList = (ArrayList<RoomData>) DataBaseClass.getDataBase(MainActivity.this).
+                getItemInsert().getRoomData();
+
+
+        clickListener();
+
+        roomDataAdapter = new RoomDataAdapter(roomDataList, MainActivity.this);
+        binding.rvRoomData.setAdapter(roomDataAdapter);
+
+
+
+
+    }
+
+    private void clickListener() {
+        binding.btnFloating.setOnClickListener(n -> {
+            openPopUpDialog();
+        });
+    }
+
+    public void deleteListData(int pos) {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                DataBaseClass.getDataBase(getApplicationContext()).getItemInsert().deleteById(roomDataList.get(pos).getKey());
+                updateList(pos);
+            }
+        });
+        Toast.makeText(MainActivity.this, "Delete Successfully", Toast.LENGTH_SHORT).show();
+
+    }
+
+    private void updateList(int p) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                roomDataList.remove(p);
+                roomDataAdapter.notifyDataSetChanged();
+            }
+        });
+    }
+
+    private void openPopUpDialog() {
+        popupAddDataBinding = PopupAddDataBinding.inflate(getLayoutInflater());
+        dialog = new Dialog(this);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+        dialog.getWindow().setWindowAnimations(R.style.animationForDialog);
+
+        dialog.setContentView(popupAddDataBinding.getRoot());
+
+
+        popupAddDataBinding.etDate.setOnClickListener(n -> {
+            // Get Current Date
+            final Calendar c = Calendar.getInstance();
+            mYear = c.get(Calendar.YEAR);
+            mMonth = c.get(Calendar.MONTH);
+            mDay = c.get(Calendar.DAY_OF_MONTH);
+
+
+            DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+                    new DatePickerDialog.OnDateSetListener() {
+
+                        @Override
+                        public void onDateSet(DatePicker view, int year,
+                                              int monthOfYear, int dayOfMonth) {
+
+                            popupAddDataBinding.etDate.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
+
+                        }
+                    }, mYear, mMonth, mDay);
+            datePickerDialog.show();
+        });
+
+        popupAddDataBinding.btnAdd.setOnClickListener(n -> {
+            String amount = popupAddDataBinding.etAmount.getText().toString();
+            String expenses = popupAddDataBinding.etExpenses.getText().toString();
+            String date = popupAddDataBinding.etDate.getText().toString();
+
+            if (amount.equals("")) {
+                popupAddDataBinding.etAmount.setError("Enter Amount");
+            } else if (expenses.equals("")) {
+                popupAddDataBinding.etExpenses.setError("Enter expenses");
+            } else if (date.equals("")) {
+                popupAddDataBinding.etDate.setError("Enter Date");
+            }
+
+
+            RoomData roomDataClass = new RoomData();
+            roomDataClass.setExpenses(expenses);
+            roomDataClass.setDate(date);
+            roomDataClass.setAmount(amount);
+
+            DataBaseClass.getDataBase(getApplicationContext()).getItemInsert().insertData(roomDataClass);
+            roomDataList = (ArrayList<RoomData>) DataBaseClass.getDataBase(MainActivity.this).
+                    getItemInsert().getRoomData();
+            roomDataAdapter = new RoomDataAdapter(roomDataList, MainActivity.this);
+            binding.rvRoomData.setAdapter(roomDataAdapter);
+            roomDataAdapter.notifyDataSetChanged();
+            //getRecyclerData();
+
+            Log.e("439858645665", roomDataList.size() + "");
+            Toast.makeText(this, "Data Save Successfully", Toast.LENGTH_SHORT).show();
+
+            popupAddDataBinding.etDate.setText("");
+            popupAddDataBinding.etAmount.setText("");
+            popupAddDataBinding.etExpenses.setText("");
+
+        });
+        dialog.show();
+
+        popupAddDataBinding.btnCancel.setOnClickListener(n -> {
+            dialog.dismiss();
+        });
+    }
+}
+
+
+
